@@ -8,7 +8,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 })
 export class MarkerService {
 
-    markers: Marker[];
+    markers: Marker[] = [];
     marker: Marker;
 
     constructor(private firestore: AngularFirestore) { }
@@ -34,6 +34,14 @@ export class MarkerService {
      */
     getMarkerDetail(id: string): AngularFirestoreDocument<Marker> {
         return this.firestore.collection('markers').doc(id);
+    }
+
+    getMarkersBySector(activity: string): AngularFirestoreCollection<Marker> {
+        return this.firestore.collection('markers', ref => {
+            let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+            query = query.where("activity", "==", activity);
+            return query;
+        })
     }
 
     /**

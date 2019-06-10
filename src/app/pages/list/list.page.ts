@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from "@ionic/angular";
 
 import { Marker } from "../../models/marker.model";
+import { ActivatedRoute } from "@angular/router";
 import { MarkerService } from "../../services/marker/marker.service";
 import { DetailPage } from "../detail/detail.page";
 
@@ -13,18 +14,32 @@ import { DetailPage } from "../detail/detail.page";
 export class ListPage implements OnInit {
 
     // Properties
-    public markers: Marker[] = [];
+    markers: Marker[] = [];
+    activity: string = '';
 
     constructor(
         private markerService: MarkerService,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
-        // Get list of markers
-        this.markerService.getAllMarkers().valueChanges()
-            .subscribe(markers => {
-                this.markers = markers;
+        // Get params to filter
+        this.route.params.subscribe(params => {
+            this.activity = params.activity;
+            // Get list of markers
+            this.filterMarkersByActivity(this.activity);
+        })
+    }
+
+    /**
+     * Filter markers by activity
+     * @param activity Activity to filter
+     */
+    public filterMarkersByActivity(activity: string): void {
+        this.markerService.getMarkersBySector(activity).valueChanges()
+            .subscribe(data => {
+                this.markers = data;
             })
     }
 

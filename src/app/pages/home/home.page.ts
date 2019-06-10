@@ -18,7 +18,7 @@ export class HomePage implements OnInit {
 
     }
 
-    public openSearch(): void {
+    public async openSearch() {
         this.router.navigateByUrl('/tabs/filter');
     }
 

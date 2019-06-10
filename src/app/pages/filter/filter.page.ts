@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { Router } from "@angular/router";
+import { Platform, AlertController } from "@ionic/angular";
+import { Router, NavigationExtras } from "@angular/router";
 import { MarkerService } from "../../services/marker/marker.service";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
+import { Marker } from "../../models/marker.model";
+
+declare var google;
 
 @Component({
     selector: 'app-filter',
@@ -11,56 +15,101 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
 })
 export class FilterPage implements OnInit {
 
-    markers = [];
+    @ViewChild('map') mapElement: ElementRef;
+    map: any;
+    markers: Marker[] = [];
+    city: string = '';
+    activity: string = '';
     latitude: string = '';
     longitude: string = '';
 
     constructor(
         private router: Router,
         private markerService: MarkerService,
-        private geolocation: Geolocation
+        private geolocation: Geolocation,
+        private platform: Platform,
+        private alertCtrl: AlertController
     ) {
-        // Get all markers
-        // fetch('./assets/data/data.json')
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         // Set markers of museums
-        //         this.markers = data.museums;
-        //         this.markerService.setDatas(this.markers);
-        //     });
-
-        this.markerService.getAllMarkers().valueChanges()
-            .subscribe(markers => {
-                this.markers = markers;
-                console.log(this.markers);
-                this.markerService.setDatas(this.markers);
-            })
     }
 
     ngOnInit() {
     }
 
-    public getLocation(): void {
+    /**
+     * Get current position or position selected and set latitude - longitude
+     */
+    private getPosition(): void {
+
+        // Get current position
+        this.geolocation.getCurrentPosition()
+            .then(res => {
+                console.log(res);
+                // Set position and display in the form
+                this.latitude = (String)(res.coords.latitude);
+                this.longitude = (String)(res.coords.longitude);
+                console.log('position : ' + this.latitude + ' | ' + this.longitude);
+            })
+            .catch((error) => {
+                console.log('error from getting location', error);
+            })
 
     }
 
-    // test display markers
-    public displayAllMarkers() {
-        // Open map
-        this.router.navigateByUrl('/tabs/map');
+    /**
+     * Open map and display markers filtered
+     * @param latitude latitude of current position or position selected
+     * @param longitude longitude of current position or position selected
+     */
+    public displayMarkersByLocation(): void {
+        // Get position to search markers
+        this.getPosition();
+
+        setTimeout(() => {
+            console.log(this.latitude + ' ---- ' + this.longitude);
+            
+            // Get coords of position to search markers
+            let params: NavigationExtras = {
+                queryParams: {
+                    'latitude': this.latitude,
+                    'longitude': this.longitude,
+                    'activity': this.activity
+                }
+            }
+
+            // Set list of markers
+            //this.filterMarkersByActivity(this.activity);
+
+            // Open map
+            console.log('set : ' + params.queryParams.activity);
+            this.router.navigate(['/tabs/map'], params);
+        }, 3000);
     }
 
-    public displayMarkersByLocation(latitude: string, longitude): void {
-        // Get coords
-
-        // Get filters
-
-        // Open map
-        this.router.navigateByUrl('/tabs/map');
+    /**
+     * Filter markers by activity
+     * @param activity Activity to filter
+     */
+    public filterMarkersByActivity(activity: string): void {
+        this.markerService.getMarkersBySector(activity).valueChanges()
+            .subscribe(data => {
+                this.markers = data;
+                this.markerService.setDatas(this.markers);
+                console.log(this.markerService.getDatas());
+                
+            })
     }
 
-    private filterMarkersByActivity(activity: string): void {
-
+    /**
+     * Display alert with error
+     * @param subject subject of error
+     * @param content content of error
+     */
+    private async displayError(subject: string, content: string) {
+        const alert = await this.alertCtrl.create({
+            header: subject,
+            message: content
+        })
+        return alert.present();
     }
 
 }
