@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Recherche</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-button color="primary" (click)="getLocation()">Ma position</ion-button>
+
+    <h4>Localisation</h4>
+    <ion-label>latitude</ion-label>
+    <ion-input type="text" [(ngModel)]="latitude"></ion-input>
+    <ion-label>Longitude</ion-label>
+    <ion-input type="text" [(ngModel)]="longitude"></ion-input>
+    <ion-label>Ville</ion-label>
+    <ion-input type="text" [(ngModel)]="city"></ion-input>
+    
+    <h4>Secteur d'activité</h4>
+    <ion-select placeholder="Secteur" interface="alert">
+        <ion-select-option value="Restaurant"></ion-select-option>
+        <ion-select-option value="Sociétés"></ion-select-option>
+        <ion-select-option value="Formation"></ion-select-option>
+        <ion-select-option value="Loisirs"></ion-select-option>
+    </ion-select>
+    
+    <ion-button color="primary" (click)="displayAllMarkers()">Valider</ion-button>
+
+</ion-content>

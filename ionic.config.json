@@ -1,5 +1,7 @@
 {
   "name": "trouvetou",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

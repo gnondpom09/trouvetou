@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-list>
+        <ion-item *ngFor="let item of markers" (click)="getMarkerDetail(item.id)" >
+            <ion-thumbnail slot="start">
+                <img [src]="item.thumbnail">
+            </ion-thumbnail>
+            <ion-label>
+                {{item.name}}
+            </ion-label>
+        </ion-item>
+    </ion-list>
+
+</ion-content>
