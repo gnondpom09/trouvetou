@@ -7,12 +7,13 @@
 <ion-content>
 
     <ion-list>
+        <!-- tester async -->
         <ion-item *ngFor="let item of markers" (click)="getMarkerDetail(item.id)" >
             <ion-thumbnail slot="start">
                 <img [src]="item.thumbnail">
             </ion-thumbnail>
             <ion-label>
-                {{item.name}}
+                {{item.name | uppercase}}
             </ion-label>
         </ion-item>
     </ion-list>

@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
-import { Platform, AlertController } from "@ionic/angular";
-import { Router, NavigationExtras } from "@angular/router";
+import { Platform, AlertController, ModalController } from "@ionic/angular";
+import { Router, NavigationExtras, ActivatedRoute } from "@angular/router";
 import { MarkerService } from "../../services/marker/marker.service";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { Marker } from "../../models/marker.model";
@@ -13,7 +13,7 @@ declare var google;
     templateUrl: './filter.page.html',
     styleUrls: ['./filter.page.scss'],
 })
-export class FilterPage implements OnInit {
+export class FilterPage implements OnInit, AfterViewInit {
 
     @ViewChild('map') mapElement: ElementRef;
     map: any;
@@ -22,23 +22,49 @@ export class FilterPage implements OnInit {
     activity: string = '';
     latitude: string = '';
     longitude: string = '';
+    params: NavigationExtras;
+    position: string = '';
+    options = [
+        { id: 1, name: "Géolocalisation", value: "auto", checked: false },
+        { id: 2, name: "saisir une localisation", value: "manual", checked: false }
+    ];
+    optionSelected: string = '';
 
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
         private markerService: MarkerService,
         private geolocation: Geolocation,
         private platform: Platform,
-        private alertCtrl: AlertController
+        private alertCtrl: AlertController,
+        private modalCtrl: ModalController
     ) {
     }
 
     ngOnInit() {
+        // get params if exists
+        // code...
+        this.optionSelected = this.options[0].value;
+        console.log(this.optionSelected);
+        
+    }
+    ngAfterViewInit() {
+        this.options[0].checked = true;
+    }
+
+    public optionChange(event) {
+        console.log("change option " + event.target.value);
+        this.optionSelected = event.target.value;
+    }
+    public selectOption(event) {
+        console.log("Select option " + event.target.value);
+        this.optionSelected = event.target.value;
     }
 
     /**
      * Get current position or position selected and set latitude - longitude
      */
-    private getPosition(): void {
+    public getPosition(): void {
 
         // Get current position
         this.geolocation.getCurrentPosition()
@@ -67,8 +93,8 @@ export class FilterPage implements OnInit {
         setTimeout(() => {
             console.log(this.latitude + ' ---- ' + this.longitude);
             
-            // Get coords of position to search markers
-            let params: NavigationExtras = {
+            // Get coords of position to search markers and filters
+            this.params = {
                 queryParams: {
                     'latitude': this.latitude,
                     'longitude': this.longitude,
@@ -80,9 +106,13 @@ export class FilterPage implements OnInit {
             //this.filterMarkersByActivity(this.activity);
 
             // Open map
-            console.log('set : ' + params.queryParams.activity);
-            this.router.navigate(['/tabs/map'], params);
+            console.log('set : ' + this.params.queryParams.activity);
+            this.router.navigate(['/tabs/map'], this.params);
+            // close modal
+            this.modalCtrl.dismiss();
+            
         }, 3000);
+
     }
 
     /**
@@ -98,6 +128,7 @@ export class FilterPage implements OnInit {
                 
             })
     }
+    
 
     /**
      * Display alert with error

@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from "@ionic/angular";
 
 import { Marker } from "../../models/marker.model";
 import { ActivatedRoute } from "@angular/router";
 import { MarkerService } from "../../services/marker/marker.service";
 import { DetailPage } from "../detail/detail.page";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.page.html',
     styleUrls: ['./list.page.scss'],
 })
-export class ListPage implements OnInit {
+export class ListPage implements OnInit, OnDestroy {
 
     // Properties
     markers: Marker[] = [];
     activity: string = '';
+    subscription: Subscription;
 
     constructor(
         private markerService: MarkerService,
@@ -30,6 +32,10 @@ export class ListPage implements OnInit {
             // Get list of markers
             this.filterMarkersByActivity(this.activity);
         })
+    }
+
+    ngOnDestroy() {
+        //this.subscription.unsubscribe();
     }
 
     /**

@@ -23,7 +23,7 @@ export class MapPage implements OnInit {
     markers: Marker[];
     latitude: any;
     longitude: any;
-    activity: string = '';
+    activity: string;
 
     constructor(
         private geoLocation: Geolocation,
@@ -39,17 +39,15 @@ export class MapPage implements OnInit {
             this.route.queryParams.subscribe(params => {
 
                 // Get all params to filter the list of markers
-                console.log('get : ' + params.latitude + ' -- ' + params.longitude);
-                this.latitude = (Number)(params.latitude);
-                this.longitude = (Number)(params.longitude);
-                this.activity = params.activity;
-                console.log('Activity : ' + this.activity);
+                this.latitude = (Number)(params.latitude) ? (Number)(params.latitude) : this.latitude;
+                this.longitude = (Number)(params.longitude) ? (Number)(params.longitude) : this.longitude;
+                this.activity = params.activity ? params.activity : this.activity;
 
                 // Display map
                 this.loadMap();
 
                 // Filter markers fraom database and display on the map
-                this.filterMarkersByActivity(this.activity);  
+                this.filterMarkersByActivity(this.activity);
 
             })
         }, 400);

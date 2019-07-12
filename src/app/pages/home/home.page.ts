@@ -19,7 +19,7 @@ export class HomePage implements OnInit {
     }
 
     public async openSearch() {
-        this.router.navigateByUrl('/tabs/filter');
+        // open modal to search place
     }
 
 }

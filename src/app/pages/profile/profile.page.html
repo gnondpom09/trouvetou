@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title slot="start">profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,6 +8,8 @@
 
     <ul>
         <li (click)="goToHome()" >Home</li>
+        <li *ngIf="uid === '' "  (click)="openLogin()">Connexion</li>
+        <li *ngIf="uid !== '' "  (click)="logout()">Déconnexion</li>
     </ul>
 
 </ion-content>

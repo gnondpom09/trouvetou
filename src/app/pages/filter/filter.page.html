@@ -1,18 +1,32 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Recherche</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>Recherche</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
 
     <h4>Localisation</h4>
-    <ion-label>latitude</ion-label>
-    <ion-input type="text" [(ngModel)]="latitude"></ion-input>
-    <ion-label>Longitude</ion-label>
-    <ion-input type="text" [(ngModel)]="longitude"></ion-input>
-    <ion-label>Ville</ion-label>
-    <ion-input type="text" [(ngModel)]="city"></ion-input>
+    <ion-list>
+        <ion-radio-group [(ngModel)]="position" (ionChange)="optionChange($event)">
+            <ion-item *ngFor="let item of options" (ionSelect)="selectOption($event)">
+                <ion-label>
+                    {{item.name}}
+                </ion-label>
+                <ion-radio slot="start" color="primary" slot="start" [checked]="item.checked" [value]="item.value">
+                </ion-radio>
+            </ion-item>
+        </ion-radio-group>
+    </ion-list>
+
+    <div *ngIf="optionSelected === 'manual'">
+        <ion-label>latitude</ion-label>
+        <ion-input type="text" [(ngModel)]="latitude"></ion-input>
+        <ion-label>Longitude</ion-label>
+        <ion-input type="text" [(ngModel)]="longitude"></ion-input>
+        <ion-label>Ville</ion-label>
+        <ion-input type="text" [(ngModel)]="city"></ion-input>
+    </div>
 
     <h4>Secteur d'activité</h4>
     <ion-select placeholder="Secteur" interface="alert" [(ngModel)]="activity">
@@ -21,7 +35,7 @@
         <ion-select-option value="formation">Formation</ion-select-option>
         <ion-select-option value="loisir">Loisirs</ion-select-option>
     </ion-select>
-    
+
     <ion-button color="primary" (click)="displayMarkersByLocation()">Valider</ion-button>
 
 </ion-content>

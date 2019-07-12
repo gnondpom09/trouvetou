@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-
+import { Storage } from "@ionic/storage";
 import { User } from "../../models/user.model";
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 
 @Injectable({
@@ -10,7 +9,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 export class UserService {
 
     constructor(private firestore: AngularFirestore,
-        private storage: NativeStorage) {
+        private storage: Storage) {
 
     }
 
@@ -18,7 +17,7 @@ export class UserService {
      * Get id of user logged
      */
     public getUid() {
-        return this.storage.getItem('uid');
+        return this.storage.get('uid');
     }
 
     /**

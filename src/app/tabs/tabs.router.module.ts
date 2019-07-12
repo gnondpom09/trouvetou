@@ -26,15 +26,6 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'filter',
-        children: [
-          {
-            path: '',
-            loadChildren: '../pages/filter/filter.module#FilterPageModule'
-          }
-        ]
-      },
-      {
         path: 'profile',
         children: [
           {

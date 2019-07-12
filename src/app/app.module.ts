@@ -13,10 +13,14 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { NativeGeocoder } from "@ionic-native/native-geocoder/ngx";
 import { AngularFireModule } from "angularfire2";
 import { AngularFirestoreModule } from "angularfire2/firestore";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DetailPageModule } from "./pages/detail/detail.module";
+import { FilterPageModule } from "./pages/filter/filter.module";
 
 import * as firebase from "firebase";
+import { AngularFireAuth } from "angularfire2/auth";
+import { IonicStorageModule } from "@ionic/storage";
 
 var firebaseConfig = {
     apiKey: "AIzaSyAOmnqO47764cZwvmsK9uEg1nlzXWbNUK4",
@@ -31,20 +35,27 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent
+    ],
     entryComponents: [],
     imports: [BrowserModule, 
         IonicModule.forRoot(), 
         AngularFireModule.initializeApp(firebaseConfig),
         AngularFirestoreModule,
         AppRoutingModule,
-        DetailPageModule
+        DetailPageModule,
+        FilterPageModule,
+        FormsModule,
+        ReactiveFormsModule,
+        IonicStorageModule.forRoot()
     ],
     providers: [
         StatusBar,
         SplashScreen,
         Geolocation,
         NativeGeocoder,
+        AngularFireAuth,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
     ],
     bootstrap: [AppComponent]
